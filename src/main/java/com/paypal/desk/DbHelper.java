@@ -35,8 +35,8 @@ public class DbHelper {
             preparedStatement.setString(1,firstName);
             preparedStatement.setString(2,lastName);
             preparedStatement.execute();
-            ResultSet resultSet = preparedStatement.executeQuery("select id from users where first_name='" + firstName +"' and last_name ='" + lastName +"'");
-            resultSet.next();
+            ResultSet resultSet = preparedStatement.executeQuery("select id from users");
+            resultSet.last();
 
             return resultSet.getInt(1);
 

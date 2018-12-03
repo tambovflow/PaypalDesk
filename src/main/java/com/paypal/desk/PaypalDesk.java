@@ -34,7 +34,7 @@ public class PaypalDesk {
 
             switch (command.toUpperCase()) {
                 case "C":
-                    createUser();
+                        createUser();
                     break;
                 case "UL":
                     listUsers();
@@ -62,7 +62,6 @@ public class PaypalDesk {
 
         System.out.print("Last name: ");
         String lastName = scanner.nextLine();
-
         int userId = DbHelper.createUser(
                 firstName, lastName
         );
