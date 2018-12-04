@@ -23,6 +23,7 @@ public class PaypalDesk {
 
         while (true) {
             System.out.println("(C) -> Create user");
+            System.out.println("(F) -> Find user");
             System.out.println("(UL) -> Users list");
             System.out.println("(+) -> Cash in");
             System.out.println("(-) -> Cash out");
@@ -34,7 +35,10 @@ public class PaypalDesk {
 
             switch (command.toUpperCase()) {
                 case "C":
-                        createUser();
+                    createUser();
+                    break;
+                case "F":
+                    findUser();
                     break;
                 case "UL":
                     listUsers();
@@ -78,6 +82,18 @@ public class PaypalDesk {
             System.out.println(
                     "Error while creating the user"
             );
+        }
+    }
+
+    public static void findUser(){
+        int userId = getUserIdFromConsole("User id: ");
+        String userString = null;
+
+        if(containsId(usersIdList,userId) && (userString=DbHelper.findUser(userId))!=null){
+
+            System.out.println(userString);
+        }else {
+            System.out.println("Error while finding");
         }
     }
 

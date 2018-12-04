@@ -45,7 +45,31 @@ public class DbHelper {
             return -1;
         }
     }
+    static String findUser(int id){
+        String sql = "select * from users where id=?";
 
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            resultSet.next();
+            int userId = resultSet.getInt(1);
+            String firstName = resultSet.getString(2);
+            String lastname = resultSet.getString(3);
+            double balance = resultSet.getDouble(4);
+
+            String user = "User {id: '" + userId + "', first_name: '" + firstName + "', last_name: " + lastname + ", balance: " + balance +"}";
+            return user;
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
     static boolean cashFlow(int userId, double amount) {
         String sqlString ="update users set balance = (balance +?)where id= ?";
         try {
