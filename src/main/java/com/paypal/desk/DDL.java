@@ -11,7 +11,7 @@ public class DDL {
             statement.execute("use paypal");
 
             statement.execute("create table if not exists users (" +
-                    "  id int auto_increment unique," +
+                    "  id int auto_increment unique primary key," +
                     "  first_name text not null," +
                     "  last_name text not null," +
                     "  balance real not null default 0" +
@@ -22,7 +22,9 @@ public class DDL {
                     "  user_from int," +
                     "  user_to int," +
                     "  transaction_amount real not null," +
-                    "  transaction_date timestamp not null default now()" +
+                    "  transaction_date timestamp not null default now()," +
+                    "  FOREIGN KEY (user_from) REFERENCES users(id) on update cascade on delete restrict," +
+                    "  FOREIGN KEY (user_to) REFERENCES users(id) on update cascade on delete restrict" +
                     ");");
 
         } catch (SQLException e){

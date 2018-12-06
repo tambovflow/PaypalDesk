@@ -10,9 +10,9 @@ create table if not exists  users (
 
 create table if not exists  transactions (
   id int auto_increment unique,
-  user_from int,
-  user_to int,
+  user_from int REFERENCES users(id) on update cascade on delete restrict,
+  user_to int REFERENCES users(id) on update cascade on delete restrict,
   transaction_amount real not null,
-  transaction_date timestamp not null default now()
+  transaction_date timestamp not null default now(),
 );
 

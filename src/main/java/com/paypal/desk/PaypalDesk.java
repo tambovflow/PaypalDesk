@@ -22,6 +22,7 @@ public class PaypalDesk {
         usersIdList = DbHelper.createUsersIdList();
 
         while (true) {
+            System.out.println("(D) -> DROP TABLES AND CREATE NEW\n");
             System.out.println("(C) -> Create user");
             System.out.println("(F) -> Find user");
             System.out.println("(UL) -> Users list");
@@ -34,6 +35,9 @@ public class PaypalDesk {
             String command = scanner.nextLine();
 
             switch (command.toUpperCase()) {
+                case "D":
+                    dropTables();
+                    break;
                 case "C":
                     createUser();
                     break;
@@ -57,6 +61,15 @@ public class PaypalDesk {
                 case "Q":
                     return;
             }
+        }
+    }
+
+    private static void dropTables(){
+
+        if(DbHelper.dropTables()){
+            System.out.println("Tables have been dropped");
+        } else {
+            System.out.println("Error while tables drop");
         }
     }
 

@@ -27,6 +27,19 @@ public class DbHelper {
         }
     }
 
+    static boolean dropTables(){
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("DROP TABLE IF EXISTS transactions;");
+            statement.executeUpdate("DROP TABLE IF EXISTS users;");
+            DDL.createDB(connection);
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
     static int createUser(String firstName, String lastName) {
 
         try {
