@@ -169,18 +169,22 @@ public class DbHelper {
         }
     }
 
-    public static Set<Integer> createUsersIdList(){
-        Set<Integer> list = new TreeSet<>();
+    static boolean containsId(int... userId){
+        String sql = "select 1 from users where id = ?";
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select id from users");
-            while (resultSet.next()){
-                list.add(resultSet.getInt(1));
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for(int id: userId) {
+                preparedStatement.setInt(1, id);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if(!resultSet.next()){
+                    System.out.println("Id: " + id + " not found");
+                    return false;
+                }
             }
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-
-        return list;
     }
 }

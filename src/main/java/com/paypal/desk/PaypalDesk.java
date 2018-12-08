@@ -3,26 +3,22 @@ package com.paypal.desk;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
 public class PaypalDesk {
-    private static Set<Integer> usersIdList;
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws InterruptedException {
         System.out.print("Creating database and tables, please wait");
-        for(int i=0; i<10; i++){
-            Thread.sleep(250);
+        for(int i=0; i<7; i++){
+            Thread.sleep(200);
             System.out.print(".");
         }
         System.out.println();
         DbHelper.createDB();
         System.out.println("Welcome to paypal");
         System.out.println("Enter command");
-        usersIdList = DbHelper.createUsersIdList();
 
         while (true) {
-            System.out.println("(D) -> DROP TABLES AND CREATE NEW\n");
             System.out.println("(C) -> Create user");
             System.out.println("(F) -> Find user");
             System.out.println("(UL) -> Users list");
@@ -30,6 +26,7 @@ public class PaypalDesk {
             System.out.println("(-) -> Cash out");
             System.out.println("(T) -> Transaction");
             System.out.println("(TL) -> Transactions list");
+            System.out.println("(D) -> DROP TABLES AND CREATE NEW");
             System.out.println("(Q) -> Quit");
 
             String command = scanner.nextLine();
@@ -65,11 +62,13 @@ public class PaypalDesk {
     }
 
     private static void dropTables(){
+        System.out.print("Are you sure? Y: ");
+        String s = scanner.nextLine().toUpperCase();
 
-        if(DbHelper.dropTables()){
+        if(s.equals("Y") && DbHelper.dropTables()){
             System.out.println("Tables have been dropped");
         } else {
-            System.out.println("Error while tables drop");
+            System.out.println("Canceled");
         }
     }
 
@@ -84,7 +83,6 @@ public class PaypalDesk {
         );
 
         if (userId != -1) {
-            usersIdList.add(userId);
             System.out.println(
                     MessageFormat.format(
                             "User {0} created successfully",
@@ -100,9 +98,9 @@ public class PaypalDesk {
 
     public static void findUser(){
         int userId = getUserIdFromConsole("User id: ");
-        String userString = null;
+        String userString;
 
-        if(containsId(usersIdList,userId) && (userString=DbHelper.findUser(userId))!=null){
+        if(DbHelper.containsId(userId)&& (userString=DbHelper.findUser(userId))!=null){
 
             System.out.println(userString);
         }else {
@@ -126,7 +124,7 @@ public class PaypalDesk {
         int userId = getUserIdFromConsole("User id: ");
         double amount = getAmountFromConsole();
 
-        if(containsId(usersIdList, userId) && DbHelper.cashFlow(userId, amount)){
+        if(DbHelper.containsId(userId) && DbHelper.cashFlow(userId, amount)){
             System.out.println("Cash in successful");
         }else{
             System.out.println("Error cash in");
@@ -138,7 +136,7 @@ public class PaypalDesk {
         int userId = getUserIdFromConsole("User id: ");
         double amount = getAmountFromConsole();
 
-        if(containsId(usersIdList, userId) && DbHelper.cashFlow(userId, -amount)){
+        if(DbHelper.containsId(userId) && DbHelper.cashFlow(userId, -amount)){
             System.out.println("Cash out successful");
         }else{
             System.out.println("Error cash out");
@@ -156,7 +154,7 @@ public class PaypalDesk {
 
         double amount = getAmountFromConsole();
 
-       if(containsId(usersIdList, userFrom, userTo) && DbHelper.transaction(userFrom, userTo, amount)) {
+       if(DbHelper.containsId(userFrom, userTo) && DbHelper.transaction(userFrom, userTo, amount)) {
            System.out.println("Transaction successful");
 
        }else
@@ -173,18 +171,6 @@ public class PaypalDesk {
         for(Transaction transaction : list){
             System.out.println(transaction);
         }
-    }
-
-    private static boolean containsId(Set<Integer> list, int... id){
-        for(int i : id) {
-            if (list.contains(i)) {
-                continue;
-            }else{
-                System.out.println("Error - userId:" + i + " not found.");
-                return false;
-            }
-        }
-        return true;
     }
 
     private static int getUserIdFromConsole(String message) {
